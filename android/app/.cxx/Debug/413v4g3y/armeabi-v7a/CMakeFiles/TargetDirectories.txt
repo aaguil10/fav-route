@@ -1,0 +1,2 @@
+/Volumes/easystore/dev/flutter/fav_route/android/app/.cxx/Debug/413v4g3y/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Volumes/easystore/dev/flutter/fav_route/android/app/.cxx/Debug/413v4g3y/armeabi-v7a/CMakeFiles/rebuild_cache.dir

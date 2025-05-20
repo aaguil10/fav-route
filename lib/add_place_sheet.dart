@@ -59,9 +59,4 @@ class _AddPlaceSheetState extends State<AddPlaceSheet> {
       ),
     );
   }
-
-  String? _validTitle(String? text) {
-    if (text?.trim().isNotEmpty ?? false) return text?.trim();
-    return null;
-  }
 }

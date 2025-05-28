@@ -1,62 +1,96 @@
 import 'package:fav_route/models/place.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
-import 'main.dart';
 
 class AddPlaceSheet extends StatefulWidget {
-  static showAddPlaceSheet(BuildContext context) => showModalBottomSheet(
-        context: rootNavigatorKey.currentContext!,
+  static Future<Place?>? show(BuildContext context, {Place? initial}) =>
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
         useRootNavigator: true,
         // Needed for full-height sheets
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         ),
-        builder: (context) => const AddPlaceSheet(),
+        builder: (context) => AddPlaceSheet._(initial: initial),
       );
 
-  const AddPlaceSheet({super.key});
+  final Place? initial;
+
+  const AddPlaceSheet._({super.key, this.initial});
 
   @override
   State<AddPlaceSheet> createState() => _AddPlaceSheetState();
 }
 
 class _AddPlaceSheetState extends State<AddPlaceSheet> {
-  final _titleController = TextEditingController();
-  final _addressController = TextEditingController();
-  final _noteController = TextEditingController();
+  late final _titleController =
+      TextEditingController(text: widget.initial?.name);
+  late final _addressController =
+      TextEditingController(text: widget.initial?.address);
+  late final _noteController =
+      TextEditingController(text: widget.initial?.note);
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _addressController.dispose();
+    _noteController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        children: [
-          TextField(
-            controller: _titleController,
-            decoration: const InputDecoration(labelText: 'Title'),
-          ),
-          TextField(
-            controller: _addressController,
-            decoration: const InputDecoration(labelText: 'Address'),
-          ),
-          TextField(
-            controller: _noteController,
-            decoration: const InputDecoration(labelText: 'Note'),
-          ),
-          TextButton(
-            onPressed: () {
-              context.pop(Place(
-                      id: 0,
-                      name: _titleController.text,
-                      address: _addressController.text,
-                      note: _noteController.text)
-                  .toJsonString());
-            },
-            child: const Text('save'),
-          ),
-        ],
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+        left: 16,
+        right: 16,
+        top: 16,
+      ),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              controller: _titleController,
+              decoration: const InputDecoration(labelText: 'Title'),
+              validator: (s) => (s == null || s.isEmpty) ? 'Required' : null,
+            ),
+            const SizedBox(height: 8),
+            TextFormField(
+              controller: _addressController,
+              decoration: const InputDecoration(labelText: 'Address'),
+              validator: (s) => (s == null || s.isEmpty) ? 'Required' : null,
+            ),
+            const SizedBox(height: 8),
+            TextFormField(
+              controller: _noteController,
+              decoration: const InputDecoration(labelText: 'Note'),
+              maxLines: 2,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _onSave,
+              child: Text(widget.initial == null ? 'Add' : 'Save'),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  void _onSave() {
+    if (!_formKey.currentState!.validate()) return;
+
+    final place = Place(
+      id: widget.initial?.id ?? DateTime.now().millisecondsSinceEpoch,
+      name: _titleController.text.trim(),
+      address: _addressController.text.trim(),
+      note: _noteController.text.trim(),
+    );
+
+    Navigator.of(context).pop(place);
   }
 }

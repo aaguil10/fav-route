@@ -15,5 +15,12 @@ class PlaceBloc extends Bloc<PlaceEvent, PlaceState> {
       final updated = List.of(state.places)..add(event.place);
       emit(state.copyWith(places: updated));
     });
+
+    on<UpdatePlace>((event, emit) {
+      final updated = state.places.map((p) {
+        return p.id == event.place.id ? event.place : p;
+      }).toList();
+      emit(state.copyWith(places: updated));
+    });
   }
 }

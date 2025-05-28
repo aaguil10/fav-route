@@ -16,3 +16,12 @@ class AddPlace extends PlaceEvent {
   @override
   List<Object?> get props => [place];
 }
+
+class UpdatePlace extends PlaceEvent {
+  final Place place;
+
+  UpdatePlace(this.place);
+
+  @override
+  List<Object?> get props => [place];
+}

@@ -36,6 +36,13 @@ class FavoritesPage extends StatelessWidget {
         return ListTile(
           title: Text(places[index].name ?? ''),
           subtitle: Text(places[index].address ?? ''),
+          onTap: () async {
+            final place =
+                await AddPlaceSheet.show(context, initial: places[index]);
+            if (place != null) {
+              context.read<PlaceBloc>().add(UpdatePlace(place));
+            }
+          },
         );
       },
     );
@@ -45,9 +52,10 @@ class FavoritesPage extends StatelessWidget {
     return IconButton(
       icon: const Icon(Icons.add),
       onPressed: () async {
-        final placeStr = await AddPlaceSheet.showAddPlaceSheet(context);
-        final place = Place.fromJsonString(placeStr);
-        context.read<PlaceBloc>().add(AddPlace(place));
+        final place = await AddPlaceSheet.show(context);
+        if (place != null) {
+          context.read<PlaceBloc>().add(AddPlace(place));
+        }
       },
     );
   }

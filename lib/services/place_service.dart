@@ -1,10 +1,14 @@
 import 'package:fav_route/models/place.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 class PlaceService {
-  final Box<Place> _places = Hive.box<Place>('places');
+  final Box<Place> _places;
 
-  Future<void> init() async {}
+  PlaceService() : _places = Hive.box<Place>('places');
+
+  @visibleForTesting
+  PlaceService.test({required Box<Place> box}) : _places = box;
 
   List<Place> getPlaces() => _places.values.toList();
 

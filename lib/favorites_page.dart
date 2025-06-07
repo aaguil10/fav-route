@@ -2,6 +2,7 @@ import 'package:fav_route/bloc/place_bloc.dart';
 import 'package:fav_route/bloc/place_event.dart';
 import 'package:fav_route/bloc/place_state.dart';
 import 'package:fav_route/models/place.dart';
+import 'package:fav_route/services/place_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,14 +16,16 @@ class FavoritesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (_) => PlaceBloc()..add(LoadPlaces()),
+        create: (context) =>
+            PlaceBloc(RepositoryProvider.of<PlaceService>(context))
+              ..add(LoadPlaces()),
         child: BlocBuilder<PlaceBloc, PlaceState>(builder: (context, state) {
-          if (state.places.isEmpty) {
+          if (state is PlacesLoading) {
             return Center(child: _buildAddButton(context));
           }
           return Column(
             children: [
-              Expanded(child: _buildPlaceList(state.places)),
+              Expanded(child: _buildPlaceList((state as PlacesLoaded).places)),
               _buildAddButton(context),
             ],
           );

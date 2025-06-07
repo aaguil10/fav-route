@@ -20,7 +20,7 @@ class AddPlace extends PlaceEvent {
 class UpdatePlace extends PlaceEvent {
   final Place place;
 
-  UpdatePlace(this.place);
+  UpdatePlace(this.place) {}
 
   @override
   List<Object?> get props => [place];

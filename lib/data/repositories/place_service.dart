@@ -1,4 +1,4 @@
-import 'package:fav_route/models/place.dart';
+import 'package:fav_route/data/models/place.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 

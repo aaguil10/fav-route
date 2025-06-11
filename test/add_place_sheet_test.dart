@@ -1,6 +1,6 @@
-import 'package:fav_route/add_place_sheet.dart';
+import 'package:fav_route/data/models/place.dart';
 import 'package:fav_route/main.dart' show rootNavigatorKey;
-import 'package:fav_route/models/place.dart';
+import 'package:fav_route/ui/widgets/add_place_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

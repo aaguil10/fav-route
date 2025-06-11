@@ -1,5 +1,5 @@
-import 'package:fav_route/favorites_page.dart';
-import 'package:fav_route/lists_page.dart';
+import 'package:fav_route/ui/pages/favorites_page.dart';
+import 'package:fav_route/ui/pages/lists_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

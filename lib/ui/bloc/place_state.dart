@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:fav_route/models/place.dart';
+import 'package:fav_route/data/models/place.dart';
 
 abstract class PlaceState extends Equatable {
   const PlaceState();

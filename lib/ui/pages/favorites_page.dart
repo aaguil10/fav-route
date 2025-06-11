@@ -1,12 +1,11 @@
-import 'package:fav_route/bloc/place_bloc.dart';
-import 'package:fav_route/bloc/place_event.dart';
-import 'package:fav_route/bloc/place_state.dart';
-import 'package:fav_route/models/place.dart';
-import 'package:fav_route/services/place_service.dart';
+import 'package:fav_route/data/models/place.dart';
+import 'package:fav_route/data/repositories/place_service.dart';
+import 'package:fav_route/ui/bloc/place_bloc.dart';
+import 'package:fav_route/ui/bloc/place_event.dart';
+import 'package:fav_route/ui/bloc/place_state.dart';
+import 'package:fav_route/ui/widgets/add_place_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'add_place_sheet.dart';
 
 class FavoritesPage extends StatelessWidget {
   static const title = 'Favorites';

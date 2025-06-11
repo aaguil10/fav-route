@@ -1,13 +1,12 @@
-import 'package:fav_route/favorites_page.dart';
-import 'package:fav_route/lists_page.dart';
-import 'package:fav_route/scaffold_with_bottom_nav.dart';
-import 'package:fav_route/services/place_service.dart';
+import 'package:fav_route/data/models/place.dart';
+import 'package:fav_route/data/repositories/place_service.dart';
+import 'package:fav_route/ui/pages/favorites_page.dart';
+import 'package:fav_route/ui/pages/lists_page.dart';
+import 'package:fav_route/ui/widgets/scaffold_with_bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
-import 'models/place.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

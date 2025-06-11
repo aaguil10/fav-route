@@ -1,4 +1,4 @@
-import 'package:fav_route/services/place_service.dart';
+import 'package:fav_route/data/repositories/place_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'place_event.dart';

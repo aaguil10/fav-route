@@ -1,24 +1,25 @@
 import 'package:fav_route/data/models/place.dart';
 import 'package:fav_route/data/repositories/place_service.dart';
-import 'package:fav_route/ui/bloc/place_bloc.dart';
-import 'package:fav_route/ui/bloc/place_event.dart';
-import 'package:fav_route/ui/bloc/place_state.dart';
+import 'package:fav_route/ui/blocs/place_list_bloc/place_list_bloc.dart';
+import 'package:fav_route/ui/blocs/place_list_bloc/place_list_event.dart';
+import 'package:fav_route/ui/blocs/place_list_bloc/place_list_state.dart';
 import 'package:fav_route/ui/widgets/add_place_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class FavoritesPage extends StatelessWidget {
+class PlaceListPage extends StatelessWidget {
   static const title = 'Favorites';
 
-  const FavoritesPage({super.key});
+  const PlaceListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (context) =>
-            PlaceBloc(RepositoryProvider.of<PlaceService>(context))
-              ..add(LoadPlaces()),
-        child: BlocBuilder<PlaceBloc, PlaceState>(builder: (context, state) {
+            PlaceListBloc(RepositoryProvider.of<PlaceService>(context))
+              ..add(LoadPlaceList()),
+        child: BlocBuilder<PlaceListBloc, PlaceListState>(
+            builder: (context, state) {
           if (state is PlacesLoading) {
             return Center(child: _buildAddButton(context));
           }
@@ -42,7 +43,7 @@ class FavoritesPage extends StatelessWidget {
             final place =
                 await AddPlaceSheet.show(context, initial: places[index]);
             if (place != null) {
-              context.read<PlaceBloc>().add(UpdatePlace(place));
+              context.read<PlaceListBloc>().add(UpdatePlaceList(place));
             }
           },
         );
@@ -56,7 +57,7 @@ class FavoritesPage extends StatelessWidget {
       onPressed: () async {
         final place = await AddPlaceSheet.show(context);
         if (place != null) {
-          context.read<PlaceBloc>().add(AddPlace(place));
+          context.read<PlaceListBloc>().add(AddPlaceList(place));
         }
       },
     );

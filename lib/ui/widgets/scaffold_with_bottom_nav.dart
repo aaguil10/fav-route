@@ -1,5 +1,5 @@
-import 'package:fav_route/ui/pages/favorites_page.dart';
 import 'package:fav_route/ui/pages/lists_page.dart';
+import 'package:fav_route/ui/pages/place_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -33,11 +33,11 @@ class ScaffoldWithBottomNav extends StatelessWidget {
   String _getTitle(BuildContext context, int index) {
     switch (index) {
       case 0:
-        return FavoritesPage.title;
+        return PlaceListPage.title;
       case 1:
         return ListsPage.title;
       default:
-        return FavoritesPage.title;
+        return PlaceListPage.title;
     }
   }
 

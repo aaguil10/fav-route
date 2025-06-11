@@ -1,16 +1,16 @@
 import 'package:equatable/equatable.dart';
 import 'package:fav_route/data/models/place.dart';
 
-abstract class PlaceState extends Equatable {
-  const PlaceState();
+abstract class PlaceListState extends Equatable {
+  const PlaceListState();
 }
 
-class PlacesLoading extends PlaceState {
+class PlacesLoading extends PlaceListState {
   @override
   List<Object?> get props => [];
 }
 
-class PlacesLoaded extends PlaceState {
+class PlacesLoaded extends PlaceListState {
   final List<Place> places;
 
   const PlacesLoaded(this.places);

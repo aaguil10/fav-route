@@ -1,26 +1,26 @@
 import 'package:equatable/equatable.dart';
 import 'package:fav_route/data/models/place.dart';
 
-abstract class PlaceEvent extends Equatable {
+abstract class PlaceListEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
-class LoadPlaces extends PlaceEvent {}
+class LoadPlaceList extends PlaceListEvent {}
 
-class AddPlace extends PlaceEvent {
+class AddPlaceList extends PlaceListEvent {
   final Place place;
 
-  AddPlace(this.place);
+  AddPlaceList(this.place);
 
   @override
   List<Object?> get props => [place];
 }
 
-class UpdatePlace extends PlaceEvent {
+class UpdatePlaceList extends PlaceListEvent {
   final Place place;
 
-  UpdatePlace(this.place) {}
+  UpdatePlaceList(this.place) {}
 
   @override
   List<Object?> get props => [place];

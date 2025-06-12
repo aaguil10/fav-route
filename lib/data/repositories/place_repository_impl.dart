@@ -1,14 +1,15 @@
 import 'package:fav_route/data/models/place.dart';
+import 'package:fav_route/domain/repositories/place_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
-class PlaceService {
+class PlaceRepositoryImpl extends PlaceRepository {
   final Box<Place> _places;
 
-  PlaceService() : _places = Hive.box<Place>('places');
+  PlaceRepositoryImpl() : _places = Hive.box<Place>('places');
 
   @visibleForTesting
-  PlaceService.test({required Box<Place> box}) : _places = box;
+  PlaceRepositoryImpl.test({required Box<Place> box}) : _places = box;
 
   List<Place> getPlaces() => _places.values.toList();
 

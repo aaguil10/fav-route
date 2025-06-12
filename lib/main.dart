@@ -1,5 +1,5 @@
 import 'package:fav_route/data/models/place.dart';
-import 'package:fav_route/data/repositories/place_service.dart';
+import 'package:fav_route/data/repositories/place_repository_impl.dart';
 import 'package:fav_route/ui/pages/lists_page.dart';
 import 'package:fav_route/ui/pages/place_list_page.dart';
 import 'package:fav_route/ui/widgets/scaffold_with_bottom_nav.dart';
@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
         providers: [
-          RepositoryProvider(create: (context) => PlaceService()),
+          RepositoryProvider(create: (context) => PlaceRepositoryImpl()),
         ],
         child: MaterialApp.router(
           title: 'Favorite Route',

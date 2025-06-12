@@ -1,5 +1,5 @@
 import 'package:fav_route/data/models/place.dart';
-import 'package:fav_route/data/repositories/place_service.dart';
+import 'package:fav_route/data/repositories/place_repository_impl.dart';
 import 'package:fav_route/ui/blocs/place_list_bloc/place_list_bloc.dart';
 import 'package:fav_route/ui/blocs/place_list_bloc/place_list_event.dart';
 import 'package:fav_route/ui/blocs/place_list_bloc/place_list_state.dart';
@@ -16,7 +16,7 @@ class PlaceListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (context) =>
-            PlaceListBloc(RepositoryProvider.of<PlaceService>(context))
+            PlaceListBloc(RepositoryProvider.of<PlaceRepositoryImpl>(context))
               ..add(LoadPlaceList()),
         child: BlocBuilder<PlaceListBloc, PlaceListState>(
             builder: (context, state) {

@@ -1,5 +1,5 @@
 import 'package:fav_route/data/models/place.dart';
-import 'package:fav_route/data/repositories/place_service.dart';
+import 'package:fav_route/data/repositories/place_repository_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -7,11 +7,11 @@ import '../mocks.mocks.dart';
 
 void main() {
   late MockBox<Place> mockBox;
-  late PlaceService placeService;
+  late PlaceRepositoryImpl placeService;
 
   setUp(() {
     mockBox = MockBox<Place>();
-    placeService = PlaceService.test(box: mockBox);
+    placeService = PlaceRepositoryImpl.test(box: mockBox);
   });
 
   test('getPlaces returns all places from the box', () {

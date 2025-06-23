@@ -5,5 +5,7 @@ abstract class PlaceListRepository {
 
   List<PlaceList> getAllPlaceLists();
 
+  PlaceList getPlaceList(String id);
+
   void deletePlaceList(String id);
 }

@@ -35,10 +35,11 @@ class PlaceListPage extends StatelessWidget {
             final place =
                 await AddPlaceSheet.show(context, initial: places[index]);
             if (place != null) {
-              final placeList = context.read<PlaceBloc>().placeList;
-              if (!place.placeListIds.contains(placeList?.id)) {
-                place.placeListIds.add(placeList!.id);
+              final id = context.read<PlaceBloc>().placeListId;
+              if (!place.placeListIds.contains(id)) {
+                place.placeListIds.add(id);
               }
+              final placeList = context.read<PlaceBloc>().state.placeList;
               context
                   .read<PlaceBloc>()
                   .add(UpdatePlace(placeList: placeList!, place: place));
@@ -55,10 +56,11 @@ class PlaceListPage extends StatelessWidget {
       onPressed: () async {
         final place = await AddPlaceSheet.show(context);
         if (place != null) {
-          final placeList = context.read<PlaceBloc>().placeList;
-          if (!place.placeListIds.contains(placeList?.id)) {
-            place.placeListIds.add(placeList!.id);
+          final id = context.read<PlaceBloc>().placeListId;
+          if (!place.placeListIds.contains(id)) {
+            place.placeListIds.add(id);
           }
+          final placeList = context.read<PlaceBloc>().state.placeList;
           context
               .read<PlaceBloc>()
               .add(AddPlace(placeList: placeList!, place: place));

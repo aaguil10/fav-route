@@ -4,68 +4,45 @@ import 'package:fav_route/data/repositories/place_list_repository_impl.dart';
 import 'package:fav_route/data/repositories/place_repository_impl.dart';
 import 'package:fav_route/domain/repositories/place_list_repository.dart';
 import 'package:fav_route/domain/repositories/place_repository.dart';
-import 'package:fav_route/ui/blocs/place_bloc/place_bloc.dart';
-import 'package:fav_route/ui/blocs/saved_places_bloc/saved_places_bloc.dart';
-import 'package:fav_route/ui/pages/place_list_page.dart';
-import 'package:fav_route/ui/pages/saved_places_page.dart';
-import 'package:fav_route/ui/widgets/scaffold_with_bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:uuid/uuid.dart';
 
+import 'app_router.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await _initHive();
+  final favoriteListId = _ensureFavoritesList();
+  runApp(MyApp(favoriteListId: favoriteListId));
+}
+
+Future<void> _initHive() async {
   await Hive.initFlutter();
   Hive.registerAdapter(PlaceListAdapter());
   Hive.registerAdapter(PlaceAdapter());
-  final placeListBox = await Hive.openBox<PlaceList>('placeLists');
+  await Hive.openBox<PlaceList>('placeLists');
   await Hive.openBox<Place>('places');
-
-  // Ensure default "Favorites" list exists
-  const favoritePlaceListName = 'Favorites';
-  final exists =
-      placeListBox.values.any((c) => c.name == favoritePlaceListName);
-  if (!exists) {
-    final general = PlaceList(
-      id: const Uuid().v4(),
-      name: favoritePlaceListName,
-    );
-    await placeListBox.put(general.id, general);
-  }
-
-  runApp(const MyApp());
 }
 
-final rootNavigatorKey = GlobalKey<NavigatorState>();
-
-final GoRouter _router = GoRouter(
-  initialLocation: '/favorites',
-  routes: <RouteBase>[
-    ShellRoute(
-      navigatorKey: rootNavigatorKey,
-      builder: (context, state, child) {
-        return ScaffoldWithBottomNav(child: child);
-      },
-      routes: [
-        GoRoute(
-          path: '/favorites',
-          pageBuilder: (context, state) =>
-              const NoTransitionPage(child: PlaceListPage()),
-        ),
-        GoRoute(
-          path: '/lists',
-          pageBuilder: (context, state) =>
-              const NoTransitionPage(child: SavedPlacesPage()),
-        ),
-      ],
-    ),
-  ],
-);
+String _ensureFavoritesList() {
+  const favoritePlaceListName = 'Favorites';
+  final box = Hive.box<PlaceList>('placeLists');
+  PlaceList favorites =
+      box.values.firstWhere((c) => c.name == favoritePlaceListName, orElse: () {
+    final newFav =
+        PlaceList(id: const Uuid().v4(), name: favoritePlaceListName);
+    box.put(newFav.id, newFav);
+    return newFav;
+  });
+  return favorites.id;
+}
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String favoriteListId;
+
+  const MyApp({super.key, required this.favoriteListId});
 
   // This widget is the root of your application.
   @override
@@ -77,22 +54,8 @@ class MyApp extends StatelessWidget {
           RepositoryProvider<PlaceListRepository>(
               create: (context) => PlaceListRepositoryImpl()),
         ],
-        child: MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                  create: (ctx) =>
-                      SavedPlacesBloc(ctx.read<PlaceListRepository>())),
-              BlocProvider(
-                  create: (ctx) =>
-                      PlaceBloc(repository: ctx.read<PlaceRepository>())),
-            ],
-            child: MaterialApp.router(
-              title: 'Favorite Route',
-              theme: ThemeData(
-                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-                useMaterial3: true,
-              ),
-              routerConfig: _router,
-            )));
+        child: AppRouter(
+          favoriteListId: favoriteListId,
+        ));
   }
 }

@@ -24,4 +24,9 @@ class PlaceListRepositoryImpl extends PlaceListRepository {
   List<PlaceList> getAllPlaceLists() {
     return _placeLists.values.toList();
   }
+
+  @override
+  PlaceList getPlaceList(String id) {
+    return _placeLists.values.firstWhere((l) => l.id == id);
+  }
 }

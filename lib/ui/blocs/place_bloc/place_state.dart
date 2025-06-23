@@ -6,26 +6,25 @@ abstract class PlaceState extends Equatable {
   final PlaceList? placeList;
 
   const PlaceState({this.placeList});
+
+  @override
+  List<Object?> get props => [placeList];
 }
 
 class PlacesInitial extends PlaceState {
-  const PlacesInitial({super.placeList});
-
-  @override
-  List<Object?> get props => [placeList];
+  const PlacesInitial() : super();
 }
 
 class PlacesLoading extends PlaceState {
-  const PlacesLoading({required super.placeList});
-
-  @override
-  List<Object?> get props => [placeList];
+  const PlacesLoading({required PlaceList placeList})
+      : super(placeList: placeList);
 }
 
 class PlacesLoaded extends PlaceState {
   final List<Place> places;
 
-  const PlacesLoaded({required super.placeList, required this.places});
+  const PlacesLoaded({required PlaceList placeList, required this.places})
+      : super(placeList: placeList);
 
   @override
   List<Object?> get props => [placeList, places];

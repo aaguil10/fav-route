@@ -39,7 +39,7 @@ class ScaffoldWithBottomNav extends StatelessWidget {
   void _onTabSelected(BuildContext context, NavTab tab) {
     switch (tab) {
       case NavTab.favorites:
-        final listId = context.read<PlaceBloc>().placeListId;
+        final listId = context.read<PlaceBloc>().state.placeList?.id;
         context.go('/list/$listId');
         break;
       case NavTab.saved:

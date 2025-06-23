@@ -1,35 +1,27 @@
-import 'package:fav_route/data/models/place.dart';
-import 'package:fav_route/data/repositories/place_repository_impl.dart';
-import 'package:fav_route/ui/blocs/place_list_bloc/place_list_bloc.dart';
-import 'package:fav_route/ui/blocs/place_list_bloc/place_list_event.dart';
-import 'package:fav_route/ui/blocs/place_list_bloc/place_list_state.dart';
+import 'package:fav_route/data/models/place_model.dart';
+import 'package:fav_route/ui/blocs/place_bloc/place_bloc.dart';
+import 'package:fav_route/ui/blocs/place_bloc/place_event.dart';
+import 'package:fav_route/ui/blocs/place_bloc/place_state.dart';
 import 'package:fav_route/ui/widgets/add_place_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PlaceListPage extends StatelessWidget {
-  static const title = 'Favorites';
-
   const PlaceListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (context) =>
-            PlaceListBloc(RepositoryProvider.of<PlaceRepositoryImpl>(context))
-              ..add(LoadPlaceList()),
-        child: BlocBuilder<PlaceListBloc, PlaceListState>(
-            builder: (context, state) {
-          if (state is PlacesLoading) {
-            return Center(child: _buildAddButton(context));
-          }
-          return Column(
-            children: [
-              Expanded(child: _buildPlaceList((state as PlacesLoaded).places)),
-              _buildAddButton(context),
-            ],
-          );
-        }));
+    return BlocBuilder<PlaceBloc, PlaceState>(builder: (context, state) {
+      if (state is PlacesLoading || state is PlacesInitial) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      return Column(
+        children: [
+          Expanded(child: _buildPlaceList((state as PlacesLoaded).places)),
+          _buildAddButton(context),
+        ],
+      );
+    });
   }
 
   Widget _buildPlaceList(List<Place> places) {
@@ -43,7 +35,13 @@ class PlaceListPage extends StatelessWidget {
             final place =
                 await AddPlaceSheet.show(context, initial: places[index]);
             if (place != null) {
-              context.read<PlaceListBloc>().add(UpdatePlaceList(place));
+              final placeList = context.read<PlaceBloc>().placeList;
+              if (!place.placeListIds.contains(placeList?.id)) {
+                place.placeListIds.add(placeList!.id);
+              }
+              context
+                  .read<PlaceBloc>()
+                  .add(UpdatePlace(placeList: placeList!, place: place));
             }
           },
         );
@@ -57,7 +55,13 @@ class PlaceListPage extends StatelessWidget {
       onPressed: () async {
         final place = await AddPlaceSheet.show(context);
         if (place != null) {
-          context.read<PlaceListBloc>().add(AddPlaceList(place));
+          final placeList = context.read<PlaceBloc>().placeList;
+          if (!place.placeListIds.contains(placeList?.id)) {
+            place.placeListIds.add(placeList!.id);
+          }
+          context
+              .read<PlaceBloc>()
+              .add(AddPlace(placeList: placeList!, place: place));
         }
       },
     );

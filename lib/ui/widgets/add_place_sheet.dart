@@ -1,5 +1,6 @@
-import 'package:fav_route/data/models/place.dart';
+import 'package:fav_route/data/models/place_model.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class AddPlaceSheet extends StatefulWidget {
   static Future<Place?>? show(BuildContext context, {Place? initial}) =>
@@ -85,7 +86,8 @@ class _AddPlaceSheetState extends State<AddPlaceSheet> {
     if (!_formKey.currentState!.validate()) return;
 
     final place = Place(
-      id: widget.initial?.id ?? DateTime.now().millisecondsSinceEpoch,
+      id: widget.initial?.id ?? const Uuid().v4(),
+      placeListIds: [],
       name: _titleController.text.trim(),
       address: _addressController.text.trim(),
       note: _noteController.text.trim(),

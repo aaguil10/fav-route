@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class ListsPage extends StatefulWidget {
+class SavedPlacesPage extends StatefulWidget {
   static const title = 'Collections';
 
-  const ListsPage({super.key});
+  const SavedPlacesPage({super.key});
 
   @override
-  State<ListsPage> createState() => _ListsPageState();
+  State<SavedPlacesPage> createState() => _SavedPlacesPageState();
 }
 
-class _ListsPageState extends State<ListsPage> {
+class _SavedPlacesPageState extends State<SavedPlacesPage> {
   @override
   Widget build(BuildContext context) {
     return const Center(

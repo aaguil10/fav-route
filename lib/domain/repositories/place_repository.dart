@@ -1,7 +1,7 @@
-import 'package:fav_route/data/models/place.dart';
+import 'package:fav_route/data/models/place_model.dart';
 
 abstract class PlaceRepository {
-  List<Place> getPlaces();
+  List<Place> getPlaces(String placeListId);
 
   void addPlace(final Place place);
 

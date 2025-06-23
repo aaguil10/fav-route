@@ -1,6 +1,7 @@
-import 'package:fav_route/ui/pages/lists_page.dart';
-import 'package:fav_route/ui/pages/place_list_page.dart';
+import 'package:fav_route/ui/blocs/place_bloc/place_bloc.dart';
+import 'package:fav_route/ui/blocs/place_bloc/place_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class ScaffoldWithBottomNav extends StatelessWidget {
@@ -15,30 +16,26 @@ class ScaffoldWithBottomNav extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(_getTitle(context, selectedIndex)),
+        title: BlocBuilder<PlaceBloc, PlaceState>(
+          builder: (context, state) {
+            if (state is PlacesInitial) {
+              return const Center(child: Text(''));
+            }
+            return Text(state.placeList?.name ?? '');
+          },
+        ),
       ),
       body: child,
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.star), label: "Favorites"),
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: "Lists"),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: "Saved"),
         ],
         selectedItemColor: Theme.of(context).colorScheme.primary,
         currentIndex: selectedIndex,
         onTap: (index) => _changeTab(context, index),
       ),
     );
-  }
-
-  String _getTitle(BuildContext context, int index) {
-    switch (index) {
-      case 0:
-        return PlaceListPage.title;
-      case 1:
-        return ListsPage.title;
-      default:
-        return PlaceListPage.title;
-    }
   }
 
   void _changeTab(BuildContext context, int index) {

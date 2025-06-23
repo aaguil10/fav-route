@@ -4,52 +4,72 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+/// Represents the two tabs in the bottom navigation.
+enum NavTab { favorites, saved }
+
 class ScaffoldWithBottomNav extends StatelessWidget {
   final Widget child;
 
-  const ScaffoldWithBottomNav({required this.child});
+  const ScaffoldWithBottomNav({required this.child, super.key});
 
   @override
   Widget build(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
-    final selectedIndex = location.startsWith('/lists') ? 1 : 0;
+    final selectedTab = _tabForLocation(location);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: BlocBuilder<PlaceBloc, PlaceState>(
-          builder: (context, state) {
-            if (selectedIndex == 1) {
-              return const Text('Saved Lists');
-            }
-            if (state is PlacesInitial) {
-              return const Center(child: Text(''));
-            }
-            return Text(state.placeList?.name ?? '');
-          },
-        ),
+        title: _AppBarTitle(selectedTab: selectedTab),
       ),
       body: child,
       bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.star), label: "Favorites"),
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: "Saved"),
-        ],
+        items: _navItems,
+        currentIndex: selectedTab.index,
         selectedItemColor: Theme.of(context).colorScheme.primary,
-        currentIndex: selectedIndex,
-        onTap: (index) => _changeTab(context, index),
+        onTap: (index) => _onTabSelected(context, NavTab.values[index]),
       ),
     );
   }
 
-  void _changeTab(BuildContext context, int index) {
-    switch (index) {
-      case 0:
+  NavTab _tabForLocation(String location) {
+    return location.startsWith('/lists') ? NavTab.saved : NavTab.favorites;
+  }
+
+  void _onTabSelected(BuildContext context, NavTab tab) {
+    switch (tab) {
+      case NavTab.favorites:
         final listId = context.read<PlaceBloc>().placeListId;
         context.go('/list/$listId');
         break;
-      case 1:
+      case NavTab.saved:
         context.go('/lists');
         break;
     }
+  }
+
+  static const List<BottomNavigationBarItem> _navItems = [
+    BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Favorites'),
+    BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Saved'),
+  ];
+}
+
+class _AppBarTitle extends StatelessWidget {
+  final NavTab selectedTab;
+
+  const _AppBarTitle({required this.selectedTab, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (selectedTab == NavTab.saved) {
+      return const Text('Saved Lists');
+    }
+
+    final state = context.select((PlaceBloc bloc) => bloc.state);
+    if (state is PlacesLoaded) {
+      return Text(state.placeList?.name ?? '');
+    }
+
+    return const SizedBox.shrink();
   }
 }
